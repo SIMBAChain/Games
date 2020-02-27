@@ -1,0 +1,98 @@
+﻿var speed : float;
+var flap : boolean;
+var flapTimer : float;
+var maxFlapTime : float;
+var flapPower : float;
+
+
+var layoutNo : int;
+var matA_1 : Material;
+var matB_1 : Material;
+var matC_1 : Material;
+
+var matA_2 : Material;
+var matB_2 : Material;
+var matC_2 : Material;
+
+var aspect : float;
+var birdSound : AudioClip;
+var bloodSpray : GameObject;
+var birdDeath : GameObject;
+
+var manager : GameObject;
+private var managerScript : GameManager;
+
+
+function Start(){
+	manager = GameObject.Find("GameManager");
+	managerScript = manager.GetComponent(GameManager);
+	var flapForce = flapPower + Random.Range(-3.0,3.0);
+	GetComponent.<Rigidbody>().velocity = Vector3(0,flapForce,0);
+	//maxFlapTime += .1;
+	flapTimer = 0;
+	flap = true;
+	aspect = transform.localScale.x / transform.localScale.y;
+	var growPercent = Random.Range(-.10, 0.5);
+	var newX = (transform.localScale.x * growPercent) + transform.localScale.x;
+	var newY = (transform.localScale.y * growPercent) + transform.localScale.y;
+	transform.localScale.x = newX;
+	transform.localScale.y = newY;
+	speed = speed - (speed * growPercent);
+}
+
+function Update () {
+	layoutNo = PlayerPrefs.GetInt("Layout");
+	manager = GameObject.Find("GameManager");
+	managerScript = manager.GetComponent(GameManager);
+	transform.position.x += speed;
+	flapTimer += Time.deltaTime;
+	if(flap){
+		flap = false;
+		Flap();
+	}
+	if(flapTimer >= maxFlapTime){
+		var flapForce = flapPower + Random.Range(-3.0,3.0);
+		GetComponent.<Rigidbody>().velocity = Vector3(0,flapForce,0);
+		//maxFlapTime += .1;
+		flapTimer = 0;
+	}
+	if(transform.position.x > 19.0 && gameObject.name == "Bird(Clone)"){
+		gameObject.name = "OldBird";
+		managerScript.minusHeart = true;
+	}
+	if(managerScript.killAll == true){
+		KillAll();
+	}
+}
+
+function KillAll(){
+	Instantiate(bloodSpray, transform.position, transform.rotation);
+	Instantiate(birdDeath, transform.position, transform.rotation);
+	yield WaitForSeconds (.1);
+	Destroy (gameObject);
+}
+
+function Flap(){
+	if(layoutNo == 0){
+		GetComponent.<Renderer>().material = matA_1;
+		yield WaitForSeconds (.1);
+		GetComponent.<Renderer>().material = matB_1;
+		yield WaitForSeconds (.1);
+		GetComponent.<Renderer>().material = matC_1;
+		yield WaitForSeconds (.1);
+		GetComponent.<Renderer>().material = matA_1;
+		yield WaitForSeconds (.1);
+		flap = true;
+	}
+	if(layoutNo == 1){
+		GetComponent.<Renderer>().material = matA_2;
+		yield WaitForSeconds (.1);
+		GetComponent.<Renderer>().material = matB_2;
+		yield WaitForSeconds (.1);
+		GetComponent.<Renderer>().material = matC_2;
+		yield WaitForSeconds (.1);
+		GetComponent.<Renderer>().material = matA_2;
+		yield WaitForSeconds (.1);
+		flap = true;
+	}
+}

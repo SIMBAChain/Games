@@ -1,0 +1,9 @@
+﻿var spawn: boolean;
+var ball : GameObject;
+
+function Update () {
+	if(spawn){
+		spawn = false;
+		Instantiate(ball, transform.position, transform.rotation);
+	}
+}

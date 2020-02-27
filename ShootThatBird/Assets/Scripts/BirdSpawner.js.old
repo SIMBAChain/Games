@@ -1,0 +1,16 @@
+﻿var spawn : boolean;
+var bird : GameObject;
+
+
+function Update () {
+	if(spawn == true){
+		spawn = false;
+		Spawn();
+	}
+}
+
+function Spawn () {
+	transform.position.x = Random.Range(-35.0,-21.0);
+	transform.position.y = Random.Range(15.0,-5.0);
+	Instantiate(bird, transform.position, transform.rotation);
+}

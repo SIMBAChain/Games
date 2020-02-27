@@ -1,0 +1,14 @@
+﻿var spawn : boolean;
+var bomb : GameObject;
+
+
+function Update () {
+	if(spawn == true){
+		spawn = false;
+		Spawn();
+	}
+}
+
+function Spawn () {
+	Instantiate(bomb, transform.position, transform.rotation);
+}

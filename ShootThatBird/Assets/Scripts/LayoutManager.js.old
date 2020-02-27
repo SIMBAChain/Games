@@ -1,0 +1,34 @@
+﻿var layoutNo : int;
+
+var backgroundImage : GameObject;
+var cityImage1 : GameObject;
+var bushesImage1 : GameObject;
+var cityImage2 : GameObject;
+var foregroundImage : GameObject;
+
+var fireGroup : GameObject;
+
+var bckImg1 : Material;
+var bckImg2 : Material;
+var forgrdImg1 : Material;
+var forgrdImg2 : Material;
+
+function Update () {
+	layoutNo = PlayerPrefs.GetInt("Layout");
+	if(layoutNo == 0){
+		backgroundImage.GetComponent.<Renderer>().material = bckImg1;
+		cityImage1.SetActive(true);
+		bushesImage1.SetActive(true);
+		cityImage2.SetActive(false);
+		foregroundImage.GetComponent.<Renderer>().material = forgrdImg1;
+		fireGroup.SetActive(true);
+	}
+	if(layoutNo == 1){
+		backgroundImage.GetComponent.<Renderer>().material = bckImg2;
+		cityImage1.SetActive(false);
+		bushesImage1.SetActive(false);
+		cityImage2.SetActive(true);
+		foregroundImage.GetComponent.<Renderer>().material = forgrdImg2;
+		fireGroup.SetActive(false);
+	}
+}

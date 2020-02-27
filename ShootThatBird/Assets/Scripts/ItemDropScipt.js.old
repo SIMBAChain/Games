@@ -1,0 +1,23 @@
+﻿var heart : boolean;
+var ammo : boolean;
+var nuke : boolean;
+var miniGun : boolean;
+
+function Start () {
+	if(heart){
+		yield WaitForSeconds (.5);
+		gameObject.tag = "Heart";
+	}
+	if(ammo){
+		yield WaitForSeconds (.5);
+		gameObject.tag = "Ammo";
+	}
+	if(nuke){
+		yield WaitForSeconds (.5);
+		gameObject.tag = "Nuke";
+	}
+	if(miniGun){
+		yield WaitForSeconds (.5);
+		gameObject.tag = "MiniGun";
+	}
+}

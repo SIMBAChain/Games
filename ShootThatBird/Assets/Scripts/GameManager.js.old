@@ -1,0 +1,190 @@
+﻿var gameStart : boolean;
+var startGroup : GameObject;
+var kills : int;
+var highScore : int;
+var killText : GameObject;
+var birdCount : int;
+var killCount : int;
+var bullets : int;
+var rememberBulletCount : int;
+var bulletText : GameObject;
+var level : int;
+var levelIncrease : boolean;
+var disableWeapons : boolean;
+
+var spawn : boolean;
+var spawnCount : int;
+var spawnGap : float;
+var timer : float;
+
+var kill : boolean;
+
+var birdSpawnerObj : GameObject;
+var birdSpawner : BirdSpawner;
+
+var gameOver : boolean;
+var gameOverBox : GameObject;
+var currentScoreText : GameObject;
+var highScoreText : GameObject;
+
+var actionLimit : int;
+var hearts : int;
+var minusHeart : boolean;
+var heart1 : GameObject;
+var heart2 : GameObject;
+var heart3 : GameObject;
+var heart4 : GameObject;
+var heart5 : GameObject;
+var heart6 : GameObject;
+
+var nuke : boolean;
+var killAll : boolean;
+var miniGun : boolean;
+
+var birdSound : AudioClip;
+var splatSound : AudioClip;
+var heartPop : AudioClip;
+
+function Start () {
+	bullets = 20;
+	level = 1;
+	birdCount = 1;
+	spawnGap = .2;
+	hearts = 3;
+}
+
+function Update () {
+	Application.targetFrameRate = 60;
+	highScore = PlayerPrefs.GetInt("HighScore");
+	killText.GetComponent(TextMesh).text = "Kills: " + kills.ToString();
+	bulletText.GetComponent(TextMesh).text = "Bullets: " + bullets.ToString();
+	birdSpawnerObj = GameObject.Find("BirdSpawner");
+	birdSpawner = birdSpawnerObj.GetComponent(BirdSpawner);
+	if(hearts == 6){
+		heart1.SetActive(true);
+		heart2.SetActive(true);
+		heart3.SetActive(true);
+		heart4.SetActive(true);
+		heart5.SetActive(true);
+		heart6.SetActive(true);
+	}
+	if(hearts == 5){
+		heart1.SetActive(false);
+		heart2.SetActive(true);
+		heart3.SetActive(true);
+		heart4.SetActive(true);
+		heart5.SetActive(true);
+		heart6.SetActive(true);
+	}
+	if(hearts == 4){
+		heart1.SetActive(false);
+		heart2.SetActive(false);
+		heart3.SetActive(true);
+		heart4.SetActive(true);
+		heart5.SetActive(true);
+		heart6.SetActive(true);	
+	}
+	if(hearts == 3){
+		heart1.SetActive(false);
+		heart2.SetActive(false);
+		heart3.SetActive(false);
+		heart4.SetActive(true);
+		heart5.SetActive(true);
+		heart6.SetActive(true);
+	}
+	if(hearts == 2){
+		heart1.SetActive(false);
+		heart2.SetActive(false);
+		heart3.SetActive(false);
+		heart4.SetActive(false);
+		heart5.SetActive(true);
+		heart6.SetActive(true);
+	}
+	if(hearts == 1){
+		heart1.SetActive(false);
+		heart2.SetActive(false);
+		heart3.SetActive(false);
+		heart4.SetActive(false);
+		heart5.SetActive(false);
+		heart6.SetActive(true);
+	}
+	if(hearts <= 0){
+		heart1.SetActive(false);
+		heart2.SetActive(false);
+		heart3.SetActive(false);
+		heart4.SetActive(false);
+		heart5.SetActive(false);
+		heart6.SetActive(false);
+		gameOver = true;
+	}
+	timer += Time.deltaTime;
+	if(gameStart){
+		startGroup.SetActive(false);
+		if(timer >= spawnGap && spawnCount < birdCount){
+			birdSpawner.spawn = true;
+			spawnCount += 1;
+			spawnGap -= .001;
+			timer = 0;
+		}
+		if(kill){
+			kill = false;
+			kills += 1;
+			killCount += 1;
+			bullets += 1;
+			GetComponent.<AudioSource>().PlayOneShot(birdSound);
+			GetComponent.<AudioSource>().PlayOneShot(splatSound);
+			if(killCount == birdCount){
+				level += 1;
+				birdCount += 1;
+				killCount = 0;
+				spawnCount = 0;
+			}
+		}
+		if(nuke){
+			nuke = false;
+			killAll = true;
+			var birdsLeft = spawnCount - killCount;
+			kills += birdsLeft;
+			bullets += birdsLeft;
+			YieldKill();
+		}
+		if(minusHeart){
+			minusHeart = false;
+			hearts -= 1;
+			GetComponent.<AudioSource>().PlayOneShot(heartPop);
+			killCount += 1;
+			if(killCount == birdCount){
+				level += 1;
+				birdCount += 1;
+				killCount = 0;
+				spawnCount = 0;
+			}
+		}
+	}
+	if(gameOver && actionLimit == 0){
+		gameOver = false;
+		disableWeapons = true;
+		actionLimit = 1;
+		gameOverBox.GetComponent.<Animation>().Play("GameOver");
+		PlayerPrefs.SetInt("RecentScore", kills);
+		if(kills > highScore){
+			PlayerPrefs.SetInt("HighScore", kills);
+		}
+	}
+	if(miniGun == true && bullets <= 0){
+		miniGun = false;
+		bullets = rememberBulletCount;
+	}
+	currentScoreText.GetComponent(TextMesh).text = kills + " Kills".ToString();
+	highScoreText.GetComponent(TextMesh).text = highScore + " Kills".ToString();
+}
+
+function YieldKill(){
+	yield WaitForSeconds(.1);
+	killAll = false;
+	yield WaitForSeconds(1);
+	level += 1;
+	birdCount += 1;
+	killCount = 0;
+	spawnCount = 0;
+}

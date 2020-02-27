@@ -1,0 +1,29 @@
+var musicCount : int;
+var musicNo : int;
+var objectName : String = "GameMusic" + musicCount;
+var themeMusic : AudioClip;
+var otherMusic : GameObject;
+var otherMusicScript : ThemeMusic;
+
+function Update(){
+	musicNo = PlayerPrefs.GetInt("MusicNumber");
+	if(musicNo == 1){
+		GetComponent.<AudioSource>().mute = true;
+	}
+	if(musicNo == 0){
+		GetComponent.<AudioSource>().mute = false;
+	}
+	otherMusic = GameObject.FindWithTag("Music");
+	otherMusicScript = otherMusic.GetComponent(ThemeMusic);
+	if(otherMusicScript.musicCount > musicCount){
+		Destroy (gameObject);
+	}
+   	DontDestroyOnLoad(gameObject);
+   	objectName = "GameMusic" + musicCount;
+   	gameObject.name = objectName;
+}
+	
+function OnLevelWasLoaded (level : int) {
+	musicCount += 1;
+	yield WaitForSeconds (.5);
+}

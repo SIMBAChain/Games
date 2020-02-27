@@ -1,0 +1,18 @@
+﻿var layoutNo : int;
+var animationName : String;
+var buttonClick : AudioClip;
+
+function Update(){
+	layoutNo = PlayerPrefs.GetInt("Layout");
+}
+
+function OnMouseDown () {
+	if(layoutNo == 0){
+		PlayerPrefs.SetInt("Layout", 1);
+	}
+	else if(layoutNo == 1){
+		PlayerPrefs.SetInt("Layout", 0);
+	}
+	transform.parent.GetComponent.<Animation>().Play(animationName);
+	GetComponent.<AudioSource>().PlayOneShot(buttonClick);
+}

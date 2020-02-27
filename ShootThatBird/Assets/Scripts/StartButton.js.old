@@ -1,0 +1,16 @@
+﻿var anim : String;
+var buttonClick : AudioClip;
+var manager : GameObject;
+private var managerScript : GameManager;
+
+function Update () {
+	manager = GameObject.Find("GameManager");
+	managerScript = manager.GetComponent(GameManager);
+}
+
+function OnMouseDown(){
+	transform.parent.GetComponent.<Animation>().Play(anim);
+	GetComponent.<AudioSource>().PlayOneShot(buttonClick);
+	yield WaitForSeconds (.2);
+	managerScript.gameStart = true;
+}

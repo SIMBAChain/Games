@@ -1,0 +1,156 @@
+﻿var startNodeObj : GameObject;
+var positionNodeObj : GameObject;
+var endNodeObj : GameObject;
+var lineObj : GameObject;
+var currentLineRenderer : GameObject;
+var line : LineRenderer;
+
+var startNode : GameObject;
+var positionNode : GameObject;
+var endNode : GameObject;
+
+var bombSpawnerObj : GameObject;
+var bombSpawner : BombSpawner;
+
+var fireSound : AudioClip;
+
+var hit : RaycastHit;
+
+var angle : float;
+var cannon : GameObject;
+var powerText : GameObject;
+
+var gunShot : AudioClip;
+var flashObj : GameObject;
+var bloodSpray : GameObject;
+var fireRate : float;
+var gunNode : GameObject;
+var gunNodeObj : GameObject;
+var muzzleFlash : GameObject;
+
+var manager : GameObject;
+private var managerScript : GameManager;
+
+
+function Update () {
+	manager = GameObject.Find("GameManager");
+	managerScript = manager.GetComponent(GameManager);
+	bombSpawnerObj = GameObject.Find("BombSpawner");
+	bombSpawner = bombSpawnerObj.GetComponent(BombSpawner);
+	if(managerScript.gameStart == true && managerScript.disableWeapons == false){
+		if (Input.GetButtonDown ("Fire1")) {
+			if(managerScript.miniGun == false){
+     	  		var mouseray1 : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+     	   		if (Physics.Raycast (mouseray1, hit)){
+        			if(hit.collider.gameObject.tag == "NodePlane"){
+         	 			Instantiate(startNodeObj, hit.point, Quaternion.identity );
+          				//Instantiate(lineObj, transform.position, transform.rotation);
+          				//currentLineRenderer = GameObject.Find("LineObj(Clone)");
+          				startNode = GameObject.Find("StartNode(Clone)");
+          				startNode.gameObject.name = "SwipeStart";
+          			}
+          		}
+        	}		
+   		 }
+   	 	if (Input.GetButton ("Fire1")) {
+   	 		if(managerScript.miniGun == false){
+    			var mouseray2 : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+    		 	if (Physics.Raycast (mouseray2, hit)){
+    		 		muzzleFlash.SetActive(false);
+    				if(hit.collider.gameObject.tag == "NodePlane"){
+    					if(positionNode){
+    						Destroy (positionNode.gameObject);
+    					}
+          				Instantiate(positionNodeObj, hit.point, Quaternion.identity );
+          				positionNode = GameObject.Find("PositionNode(Clone)");
+          				positionNode.gameObject.name = "PositionNode";
+          				powerText.SetActive(true);
+          				var xDistance = startNode.transform.position.x - positionNode.transform.position.x;
+          				var yDistance = startNode.transform.position.y - positionNode.transform.position.y;
+          				var distance = Vector3.Distance (startNode.transform.position, positionNode.transform.position);
+          				var powerPercent = (distance / 20) * 100;
+          				powerPercent = Mathf.Round(powerPercent * 10) / 10;
+          				if(powerPercent > 100){
+          					powerPercent = 100;
+          				}
+          				powerText.GetComponent(TextMesh).text = powerPercent + "%".ToString();
+          				angle = Mathf.Atan2(xDistance, yDistance) * Mathf.Rad2Deg;
+          				cannon.transform.eulerAngles.z = -angle; 
+          			}
+          		}
+          	}
+       		else if(managerScript.miniGun == true){
+       			gunNode = GameObject.Find("GunNode");
+       			if(gunNode){
+    				Destroy (gunNode.gameObject);
+    			}
+       			fireRate += Time.deltaTime;
+       			if(fireRate > .01){
+       				muzzleFlash.SetActive(false);
+       			}
+       			if(fireRate > .035){
+       				fireRate = 0;
+          			if(managerScript.bullets > 0){
+          				Debug.Log("MiniActive");
+          				var directionRay : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+          				if (Physics.Raycast (directionRay, hit)){
+          					Instantiate(gunNodeObj, hit.point, Quaternion.identity );
+          					gunNode = GameObject.Find("GunNode(Clone)");
+          					gunNode.gameObject.name = "GunNode";
+          				}
+          				var gunNodeX = gunNode.transform.position.x - cannon.transform.position.x;
+          				var gunNodeY = gunNode.transform.position.y - cannon.transform.position.y;
+          				angle = Mathf.Atan2(gunNodeX, gunNodeY) * Mathf.Rad2Deg;
+          				cannon.transform.eulerAngles.z = -angle; 
+          				var miniGunRay : Ray = Camera.main.ScreenPointToRay (Input.mousePosition + Random.onUnitSphere*25);
+          				//audio.Stop();
+          				muzzleFlash.SetActive(true);
+          				if (Physics.Raycast (miniGunRay, hit)){
+          					GetComponent.<AudioSource>().PlayOneShot(gunShot);
+          					Instantiate(flashObj, hit.point, Quaternion.identity );
+          					managerScript.bullets -= 1;
+          					if(hit.collider.gameObject.tag == "Bird"){
+          						Instantiate(bloodSpray, hit.point, Quaternion.identity );
+          						Destroy (hit.collider.gameObject);
+          						managerScript.kill = true;
+          					}
+          				}
+          			}
+          		}
+         	}
+   		}
+		if (Input.GetButtonUp ("Fire1")) {
+			powerText.SetActive(false);
+			muzzleFlash.SetActive(false);
+			if(managerScript.miniGun == false){
+   	 			var mouseray3 : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+    			 if (Physics.Raycast (mouseray3, hit)){
+    				if(hit.collider.gameObject.tag == "NodePlane"){
+          				Instantiate(endNodeObj, hit.point, Quaternion.identity );
+          				endNode = GameObject.Find("EndNode(Clone)");
+          				endNode.gameObject.name = "SwipeEnd";
+          				//Destroy (currentLineRenderer.gameObject);
+          				Destroy (positionNode.gameObject);
+          				startNode.transform.parent = endNode.transform;
+          				endNode.transform.position.x = bombSpawner.transform.position.x;
+          				endNode.transform.position.y = bombSpawner.transform.position.y;
+          				if(managerScript.bullets > 0){
+          					bombSpawner.spawn = true;
+          					managerScript.bullets -= 1;
+          					GetComponent.<AudioSource>().PlayOneShot(fireSound);
+          				}
+          				else if(managerScript.bullets <= 0){
+          					Destroy(startNode.gameObject);
+          					Destroy(endNode.gameObject);
+          				}
+          			}
+          		}
+   	    	}
+    	}
+   	 	//if(currentLineRenderer){
+    	//	var currentLine = currentLineRenderer.GetComponent(LineRenderer);
+    	//	currentLine.SetPosition(0, startNode.transform.position);
+    	//	currentLine.SetPosition(1, positionNode.transform.position);
+    	//}
+    }
+}

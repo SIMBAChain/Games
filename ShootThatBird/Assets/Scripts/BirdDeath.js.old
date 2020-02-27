@@ -1,0 +1,9 @@
+﻿var deathSound : AudioClip;
+var delay : float;
+
+function Start () {
+	yield WaitForSeconds (Random.Range(0.1,0.5));
+	GetComponent.<AudioSource>().PlayOneShot(deathSound);
+	yield WaitForSeconds (delay);
+	Destroy (gameObject);
+}

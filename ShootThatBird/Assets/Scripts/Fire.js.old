@@ -1,0 +1,26 @@
+﻿var flames : boolean;
+var resetFlames : float;
+var mat1 : Material;
+var mat2 : Material;
+var mat3 : Material;
+
+function Update () {
+	if(flames){
+		flames = false;
+		Flame();
+	}
+	resetFlames += Time.deltaTime;
+	if(resetFlames >= .3){
+		flames = true;
+		resetFlames = 0;
+	}
+}
+
+function Flame(){
+	GetComponent.<Renderer>().material = mat1;
+	yield WaitForSeconds (.1);
+	GetComponent.<Renderer>().material = mat2;
+	yield WaitForSeconds (.1);
+	GetComponent.<Renderer>().material = mat3;
+	yield WaitForSeconds (.1);
+}

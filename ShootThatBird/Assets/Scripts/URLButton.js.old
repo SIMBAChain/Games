@@ -1,0 +1,9 @@
+﻿var animationName : String;
+var buttonClick : AudioClip;
+
+function OnMouseDown () {
+	transform.parent.GetComponent.<Animation>().Play(animationName);
+	GetComponent.<AudioSource>().PlayOneShot(buttonClick);
+	yield WaitForSeconds(.2);
+	Application.OpenURL ("https://www.facebook.com/pages/Shoot-Flappy-Bird/627079627347973");
+}

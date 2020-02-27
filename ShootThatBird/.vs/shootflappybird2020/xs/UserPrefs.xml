@@ -1,0 +1,39 @@
+﻿<Properties StartupConfiguration="{3B9FC630-FE4B-9B27-6EF5-BDD2141057DA}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/RestoreButton.cs">
+    <Files>
+      <File FileName="Assets/Scripts/GameManager.cs" Line="208" Column="16" />
+      <File FileName="Assets/SimbaUnity-master/Assets/Scripts/SimbaInfo.cs" Line="16" Column="1" />
+      <File FileName="Assets/SimbaUnity-master/Assets/Scripts/PostandSign.cs" Line="31" Column="4" />
+      <File FileName="Assets/SimbaUnity-master/Assets/Scripts/GetTransactions.cs" Line="1" Column="1" />
+      <File FileName="Assets/SimbaUnity-master/Assets/Scripts/HighscoreTable.cs" Line="27" Column="1" />
+      <File FileName="Assets/Scripts/URLButton.cs" Line="37" Column="9" />
+      <File FileName="Assets/Scripts/StartButton.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/RestoreButton.cs" Line="27" Column="30" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="shootflappybird2020" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="RestoreButton.cs" selected="True" />
+              </Node>
+              <Node name="SimbaUnity-master" expanded="True">
+                <Node name="Assets" expanded="True">
+                  <Node name="Scripts" expanded="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="651dc23a-9c80-4c50-810a-b581026d25bf" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

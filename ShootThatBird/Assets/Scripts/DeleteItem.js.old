@@ -1,0 +1,6 @@
+﻿var waitTime : float;
+
+function Start () {
+	yield WaitForSeconds (waitTime);
+	Destroy (gameObject);
+}

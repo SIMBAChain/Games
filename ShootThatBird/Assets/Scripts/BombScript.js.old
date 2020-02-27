@@ -1,0 +1,89 @@
+﻿var launchBomb : boolean;
+var swipeStart : GameObject;
+var swipeEnd : GameObject;
+var swipeDistance : float;
+var multiplier : float;
+var movePlayer : boolean;
+var ballInPlay : boolean;
+
+var power : float;
+var dragBlood : GameObject;
+var bloodSpray : GameObject;
+var heart : GameObject;
+var ammo : GameObject;
+var nukeObj : GameObject;
+var miniGunObj : GameObject;
+var manager : GameObject;
+private var managerScript : GameManager;
+
+
+function Start () {
+	swipeStart = GameObject.Find("SwipeStart");
+	swipeEnd = GameObject.Find("SwipeEnd");
+	transform.LookAt(swipeStart.transform);
+	swipeDistance = Vector3.Distance (swipeStart.transform.position, swipeEnd.transform.position);
+	if(swipeDistance > 20){
+		swipeDistance = 20;
+	}
+	power = swipeDistance * multiplier;
+	Destroy (swipeStart.gameObject);
+	Destroy (swipeEnd.gameObject);
+	GetComponent.<Rigidbody>().AddRelativeForce(-Vector3.forward * power);
+}
+
+function Update () {
+	manager = GameObject.Find("GameManager");
+	managerScript = manager.GetComponent(GameManager);
+}
+
+function OnTriggerEnter (collision : Collider){
+	if(collision.GetComponent.<Collider>().gameObject.tag == "Bird"){
+		Destroy(collision.gameObject);
+		managerScript.kill = true;
+		var powerUpChance = Random.Range(1,50);
+		if(powerUpChance >= 0 && powerUpChance < 11){
+			Instantiate(heart, transform.position, Quaternion.Euler(0,0,-180));
+		}
+		if(powerUpChance >= 11 && powerUpChance < 16){
+			Instantiate(ammo, transform.position, Quaternion.Euler(0,0,-180));
+		}
+		if(powerUpChance >= 16 && powerUpChance < 21){
+			Instantiate(nukeObj, transform.position, Quaternion.Euler(0,0,-180));
+		}
+		if(powerUpChance >= 21 && powerUpChance < 26){
+			Instantiate(miniGunObj, transform.position, Quaternion.Euler(0,0,-180));
+		}
+		Instantiate(bloodSpray, transform.position, transform.rotation);
+		dragBlood = GameObject.Find("BloodSpray(Clone)");
+		dragBlood.transform.parent = gameObject.transform;
+		dragBlood.gameObject.name = "OldBlood";
+		yield WaitForSeconds (.2);
+		dragBlood.transform.parent = null;
+	}
+	if(collision.GetComponent.<Collider>().gameObject.tag == "Heart"){
+		if(managerScript.hearts < 6){
+			managerScript.hearts += 1;
+		}
+		Destroy(collision.gameObject);
+	}
+	if(collision.GetComponent.<Collider>().gameObject.tag == "Ammo"){
+		managerScript.bullets += 5;
+		Destroy(collision.gameObject);
+	}
+	if(collision.GetComponent.<Collider>().gameObject.tag == "Nuke"){
+		managerScript.nuke = true;
+		Destroy(collision.gameObject);
+	}
+	if(collision.GetComponent.<Collider>().gameObject.tag == "MiniGun"){
+		managerScript.miniGun = true;
+		managerScript.rememberBulletCount = managerScript.bullets;
+		managerScript.bullets = 250;
+		Destroy(collision.gameObject);
+	}
+}
+function OnCollisionEnter(collision : Collision){
+	if(collision.collider.gameObject.tag == "DisableBall"){
+		gameObject.GetComponent.<Collider>().isTrigger = true;
+	}
+}
+		
